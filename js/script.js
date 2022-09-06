@@ -61,7 +61,7 @@ function htmlEntities(str) {
 
 
 
-async function  loadnewmessage(id,id_message) {
+async function  loadnewmessage(id,id_message) {//#############a modifier
   var main_content=document.querySelector("#main-content");
   id_message=parseInt(id_message);
   var load = function(request) {
@@ -70,34 +70,40 @@ async function  loadnewmessage(id,id_message) {
     reponse.forEach(function(el){
                     var p=document.createElement("p");
                     p.innerHTML=htmlEntities(el.message);
-                    if(el.sent_by==getCookie("id")){
-                      p.style.backgroundColor="blue";
+                    if (el.image.length>0) {
+                      var image=document.createElement("img");
+                      image.src=el.image;
+                      image.alt="image";
+                      main_content.appendChild(image);
                     }
                     main_content.appendChild(p);
                   });
     if(reponse.length)
     {
     id_message+=reponse.length;
-    var a=document.getElementById("message_a_envoyer").value;
-    document.getElementById("remove_me").remove();
-    var inp=document.createElement("input");
-    inp.type="text";
-    inp.id="message_a_envoyer";
-    inp.value=a;
+    var a=document.querySelector(".message_a_envoyer");
+    document.querySelector(".message_a_envoyer").remove();
+    var form=document.createElement("p");
+    form.className="message_a_envoyer";
+    var inp1=document.createElement("input");
+    inp1.type="text";
+    inp1.id="message_text";
+    inp1.name="message_text";
+    var inp2=document.createElement("input");
+    inp2.type="file";
+    inp2.id="message_image";
     var sub=document.createElement("input");
     sub.type="submit";
-    sub.value="envoyer";
     sub.id=""+id;
     sub.onclick=sendmessage;
-    var par=document.createElement("p");
-    par.appendChild(inp);
-    par.appendChild(sub);
-    par.id="remove_me";
-    main_content.appendChild(par);
+    sub.value="envoyer";
+    form.appendChild(inp1);
+    form.appendChild(inp2);
+    form.appendChild(sub);
+    main_content.appendChild(form);
     }
-    //console.log(reponse);
   };
-  while(document.getElementById("message_a_envoyer")){
+  while(document.querySelector(".message_a_envoyer")){
           $ajaxUtils.sendPostRequest("loadnewmessage.php",load,"id="+id+"&id_message="+id_message);
           await new Promise(r=>setTimeout(r,1000));
   }
@@ -170,8 +176,31 @@ function  rechercher() {
 
 
 
+function voir_desc(){
+  var main_content=document.querySelector("#main-content");
+  main_content.innerHTML="";
+  var load = function(request) {
+    var reponse=JSON.parse(request.responseText);
+    reponse.forEach(function(el){
+                    var p=document.createElement("p");
+                    p.innerHTML=htmlEntities(el.message);
+                    if (el.image.length>0) {
+                      var image=document.createElement("img");
+                      image.src=el.image;
+                      image.alt="image";
+                      main_content.appendChild(image);
+                    }
+                    main_content.appendChild(p);
+                    id_message=el.id_message;
+                  });
+  };
+  $ajaxUtils.sendPostRequest("voir_desc.php",load,"id="+this.id);
+  var id_to_use=this.id;
 
-function  loadmessage() {
+}
+
+
+function  loadmessage() {//#################################a modifier
   var main_content=document.querySelector("#main-content");
   main_content.innerHTML="";
   var id_message=0;
@@ -180,37 +209,43 @@ function  loadmessage() {
     reponse.forEach(function(el){
                     var p=document.createElement("p");
                     p.innerHTML=htmlEntities(el.message);
-                    if(el.sent_by==getCookie("id")){
-                      p.style.backgroundColor="blue";
+                    if (el.image.length>0) {
+                      var image=document.createElement("img");
+                      image.src=el.image;
+                      image.alt="image";
+                      main_content.appendChild(image);
                     }
                     main_content.appendChild(p);
                     id_message=el.id_message;
                   });
-    var inp=document.createElement("input");
-    inp.type="text";
-    inp.id="message_a_envoyer"
+    var form=document.createElement("p");
+    form.className="message_a_envoyer";
+    var inp1=document.createElement("input");
+    inp1.type="text";
+    inp1.id="message_text";
+    inp1.name="message_text";
+    var inp2=document.createElement("input");
+    inp2.type="file";
+    inp2.id="message_image";
     var sub=document.createElement("input");
     sub.type="submit";
-    sub.value="envoyer";
     sub.id=""+id_to_use;
     sub.onclick=sendmessage;
-    var par=document.createElement("p");
-    par.appendChild(inp);
-    par.appendChild(sub);
-    par.id="remove_me";
-    par.className="bottom";
-    main_content.appendChild(par);
+    sub.value="envoyer";
+    form.appendChild(inp1);
+    form.appendChild(inp2);
+    form.appendChild(sub);
+    main_content.appendChild(form);
     loadnewmessage(id_to_use,id_message);
   };
   $ajaxUtils.sendPostRequest("loadmessage.php",load,"id="+this.id);
   var id_to_use=this.id;
 }
-//@@ n'affiche pas encore
 
 
 
 
-function  loaduser() {
+function  loaduser() {//#a modifier
   var main_content=document.querySelector("#main-content");
   main_content.innerHTML="";
   var load = function(request) {
@@ -222,20 +257,26 @@ function  loaduser() {
                     p1.innerText="make_demande_ami";
                     p1.id=""+el.id;
                     p1.onclick=make_demande_ami;
-                    var inp=document.createElement("input");
-                    inp.type="text";
-                    inp.id="message_a_envoyer"
+                    var form=document.createElement("p");
+                    form.className="message_a_envoyer";
+                    var inp1=document.createElement("input");
+                    inp1.type="text";
+                    inp1.id="message_text";
+                    inp1.name="message_text";
+                    var inp2=document.createElement("input");
+                    inp2.type="file";
+                    inp2.id="message_image";
                     var sub=document.createElement("input");
                     sub.type="submit";
-                    sub.value="envoyer";
                     sub.id=""+el.id;
                     sub.onclick=sendmessage;
-                    var par2=document.createElement("p");
-                    par2.appendChild(inp);
-                    par2.appendChild(sub);
+                    sub.value="envoyer";
+                    form.appendChild(inp1);
+                    form.appendChild(inp2);
+                    form.appendChild(sub);
+                    main_content.appendChild(form);
                     main_content.appendChild(p1);
                     main_content.appendChild(par1);
-                    main_content.appendChild(par2);
                   });
   };
   $ajaxUtils.sendPostRequest("loaduser.php",load,"id="+this.id);
@@ -251,14 +292,36 @@ function  loaduser() {
   main_content.innerHTML="";
   var d_b_m=document.createElement("p");
   d_b_m.innerHTML="demande_ami_by_me";
-  d_b_m.className="col-md-6 col-sm-6 col-xs-6";
   d_b_m.onclick=see_demande_amibm;
   main_content.appendChild(d_b_m);
   var d_b_o=document.createElement("p");
   d_b_o.innerHTML="demande_ami_by_other";
-  d_b_o.className="col-md-6 col-sm-6 col-xs-6";
   d_b_o.onclick=see_demande_amibo;
   main_content.appendChild(d_b_o);
+  var voir_desc=document.createElement("p");
+  voir_desc.innerHTML="voir description";
+  voir_desc.id=""+getCookie('id');
+  voir_desc.onclick=loadmessage;
+  main_content.appendChild(voir_desc);
+  var form=document.createElement("p");
+  var inp1=document.createElement("input");
+  inp1.type="text";
+  inp1.id="message_text";
+  var inp2=document.createElement("input");
+  inp2.type="file";
+  inp2.id="message_image";
+  var sub=document.createElement("input");
+  sub.type="submit";
+  sub.id=""+getCookie('id');
+  sub.onclick=sendmessage;
+  sub.value="envoyer";
+  var add_desc=document.createElement("p");
+  add_desc.innerHTML="ajouter description";
+  form.appendChild(add_desc);
+  form.appendChild(inp1);
+  form.appendChild(inp2);
+  form.appendChild(sub);
+  main_content.appendChild(form);
   var sub=document.createElement("input");
   sub.type="submit";
   sub.value="deconnexion";
@@ -276,13 +339,21 @@ function  loaduser() {
 
   }
 
-  function  sendmessage() {
-  message_a_envoyer=document.querySelector("#message_a_envoyer");
-  var load = function(request) {
+  function  sendmessage() {//####################amodifier modifier sendmessage.php aussi
+  var load = function() {
+    console.log(request)
   };
-  $ajaxUtils.sendPostRequest("sendmessage.php",load,"message="+encodeURIComponent(message_a_envoyer.value)+"&id="+this.id);
-  message_a_envoyer.value="";
+  console.log("aaaaaaa    "+this.id);
+  var request=new XMLHttpRequest()
+  request.onload=load;
+  request.open("POST", "sendmessage.php",true);
+    var data=new FormData();
+    data.append('message_image',document.getElementById('message_image').files[0]);
+    data.append('message_text',document.getElementById('message_text').value);
+    data.append('id',this.id);
+    request.send(data);
 }
+
 function  make_demande_ami() {
   var load = function(request) {
     console.log(request);

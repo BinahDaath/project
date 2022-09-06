@@ -68,6 +68,10 @@
       ExecRequete("create table friend$id (id integer,username varchar(50))",$connexion);
       ExecRequete("create table demande_by_me$id (id integer,username varchar(50))",$connexion);
       ExecRequete("create table demande_by_other$id (id integer,username varchar(50))",$connexion);
+      //ExecRequete("create table desc$id (id_message  integer not null auto_increment primary key,message varchar(200),image varchar(200))",$connexion);
+      //ExecRequete("create table id_image$id(id  integer )",$connexion);
+      //ExecRequete("insert into id_image$id (id) values(1)",$connexion);
+      //mkdir('message'.$id);
   	}
 	?>
   </div>
